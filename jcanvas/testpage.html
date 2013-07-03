@@ -1,0 +1,106 @@
+﻿<html>
+<head>
+<title>Canvas test</title>
+<script type="text/javascript" src="jcanvas.js" ></script>
+<!--testing function-->
+<script type="text/javascript">
+    var myTimer;
+    var canvas;
+    var logCanvas
+    //var mEvtMgr;
+    var canvasMgr;
+    var mouseMitr;
+
+    var time;
+    var logger;
+    var pie;
+    var pie1;
+    var circle1;
+    var flashBoardAry; //a array of flashboards
+
+    function init() {
+        var r = 50;
+        time = new Date();
+        
+        pie = new PieChart(r, r, time.getMilliseconds() / 1000, 40);
+        pie1 = new PieChart(3 * r, 3 * r, 0.75, 40);
+        circle1 = new Circle(5 * r, r, r, "red", "orange");
+
+        //setTimeout(draw, 1000);  
+        canvas = document.getElementById("DrawCanvas");
+        logCanvas = document.getElementById("LogCanvas");
+        logger = new Logger(logCanvas);
+
+        mouseMitr = new MouseMonitor(canvas, logger);
+        mouseMitr.monitorMousePos();
+        mouseMitr.registerListener(pie1);
+        canvasMgr = new CanvasManager(canvas);
+
+        //prepare chars for flash
+        //chars = prepareAsciiChars();
+        //--put a flashboard array
+        var numberOfFlashBoard = 1;
+        flashBoardAry = new FlashBoardArray(100, 100, 1, 0, 50, 30, canvas);
+        flashBoardAry.buildBoards();
+        flashBoardAry.setTarget(new Array("万"));
+    }
+
+    function draw() {
+        //--start flash board
+        flashBoardAry.startAll();
+//        for (i = 0; i < flashBoardAry.length; i++) {
+//            flashBoardAry[i].startFlash();
+//        }
+
+        if (!Boolean(myTimer)) {
+            //myTimer = setInterval(onDraw, 10);     
+        }
+    }
+
+    function onDraw() {
+        canvasMgr.clearCanvas();
+        time = new Date();
+        pie.setPercent(time.getMilliseconds() / 1000); //update pie
+        pie.draw(canvasMgr.canvas);
+        pie1.draw(canvasMgr.canvas);
+        circle1.draw(canvasMgr.canvas);
+    }
+
+    function stop() {
+        clearInterval(myTimer);
+        myTimer = null;
+        //--stop flashboards
+        flashBoardAry.stopAll();
+    }
+
+</script>
+
+</head>
+<body onload="init()">
+    <table>
+        <tr>
+            <td>
+                <canvas id="DrawCanvas" width="1000" height="300" style="border: thin gray solid;"></canvas>
+                <br />
+                <canvas id="LogCanvas" width="1000" height="30" style="border: thin black solid;background-color: black;"></canvas>
+            </td>
+            <td text-align="left" valign="top">
+            
+            <label>Mouse-X:</label><label id="Mouse-X"></label>
+            <br />
+            <label>Mouse-Y:</label ><label id="Mouse-Y"></label>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <font onclick="draw()" style="width: 100px; height: 30px; background-color: Orange">
+                    Draw</font>
+                <font onclick="stop()" style="width: 100px; height: 30px; background-color: Orange">
+                    Stop</font>
+            </td>
+            <td>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

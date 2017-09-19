@@ -1,0 +1,8 @@
+[
+   {
+       id: 111, type: 'putaway', stack: 1
+   },
+   {
+       id: 222, type: 'full pull', stack: 2
+   }
+]
